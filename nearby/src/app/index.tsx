@@ -1,7 +1,9 @@
-import {View, Text} from "react-native";
+import { View } from "react-native";
 
 import { Welcome } from "@/components/welcome";
 import { Steps } from "@/components/steps";
+import { Button } from "@/components/button";
+import { IconPlus } from "@tabler/icons-react-native";
 
 export default function Index() {
     return (
@@ -12,6 +14,11 @@ export default function Index() {
             }}>
             <Welcome />
             <Steps/>
+            {/* <Button isLoading> */}
+            <Button>
+                <Button.Icon icon={IconPlus}/>
+                <Button.Title>Get started</Button.Title>
+            </Button>
         </View>
     )
 }
