@@ -7,20 +7,20 @@ import { Button } from "@/components/button";
 import { IconPlus } from "@tabler/icons-react-native";
 
 export default function Index() {
-    
+
     return (
         <View style={{
-            flex:1,
+            flex: 1,
             padding: 40,
             gap: 40
-            }}>
+        }}>
             <Welcome />
-            <Steps/>
+            <Steps />
             {/* <Button isLoading> */}
-            <Button onPress={ () => {
+            <Button onPress={() => {
                 router.navigate("/home");
-                }}>
-                <Button.Icon icon={IconPlus}/>
+            }}>
+                <Button.Icon icon={IconPlus} />
                 <Button.Title>Get started</Button.Title>
             </Button>
         </View>
