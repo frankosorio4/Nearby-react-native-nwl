@@ -15,7 +15,7 @@ type Props = {
 }
 
 export function Categories({ data, selected, onSelected }: Props) {
-    console.log(data);
+    //console.log(data);
 
     return (
         <FlatList
