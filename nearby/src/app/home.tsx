@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { View, Text, Alert } from "react-native";
 import { Category } from "../components/category";
 import MapView, { Callout, Marker } from "react-native-maps";
@@ -10,6 +10,7 @@ import { fontFamily, colors } from "@/styles/theme";
 import { Places } from "@/components/places";
 import { Categories, CategoriesProps } from "@/components/categories";
 import { PlaceProps } from "@/components/place";
+import { router } from "expo-router";
 
 export default function Home() {
 
@@ -34,6 +35,7 @@ export default function Home() {
             const { data } = await api.get("/categories");
             setCategories(data);
             setCategory(data[0].id);
+            // console.log(!(!data),"CATEGORIES setted in fetchCategories-home");
         }
         catch (error) {
             console.log(error);
@@ -44,11 +46,13 @@ export default function Home() {
     async function fetchMarkets() {
         try {
             if (!category) {
+                // console.log(!category, "category not selected in fetchMarkets-home");
                 return;
             }
             const { data } = await api.get("/markets/category/" + category);
             setMarkets(data);
-            console.log(data);
+            // console.log("market data",markets);
+            // console.log(!(!data),"MARKETS setted in fetchMarkets-home");
         }
         catch (error) {
             console.log(error);
@@ -72,13 +76,30 @@ export default function Home() {
     }
 
     useEffect(() => {
-        //getCurrentLocation();// if we need to get the current device location
         fetchCategories();
+        // if we need to get the current device location
+        //getCurrentLocation();
     }, []);
 
     useEffect(() => {
+        console.log(category);
         fetchMarkets();
-    }, [category]);//we need to wait for the category to be fetched before fetching the markets
+        // console.log(markets);
+    }, [category]);//Dependence, we need to wait for the category to be fetched before fetching the markets
+
+    //TO FOCUS ON THE CURRENT LOCATION--
+    const mapRef = useRef<MapView>(null);
+
+    useEffect(() => {
+        if (mapRef.current && currentLocation) {
+            mapRef.current.animateToRegion({
+                latitude: currentLocation.latitude,
+                longitude: currentLocation.longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+            }, 1000);
+        }
+    }, [currentLocation]);
 
     return (
         <View style={{ flex: 1, backgroundColor: "#CECECE" }}>
@@ -88,12 +109,13 @@ export default function Home() {
                 selected={category}
             />
             <MapView
+                ref={mapRef}
                 style={{ flex: 1 }}
                 initialRegion={{
                     latitude: currentLocation.latitude,
                     longitude: currentLocation.longitude,
-                    latitudeDelta: 0.02,
-                    longitudeDelta: 0.02,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,
                 }}>
                 <Marker
                     identifier="current"
@@ -103,43 +125,44 @@ export default function Home() {
                     }}
                     image={require("@/assets/location.png")}
                 />
-                {
-                    markets.map(item => (
-                        <Marker
-                            key={item.id}
-                            identifier={item.id}
-                            coordinate={{
-                                latitude: item.latitude,
-                                longitude: item.longitude
-                            }}
-                            image={require("@/assets/pin.png")}
-                        >
-                            <Callout>
-                                <View>
-                                    <Text
-                                        style={{
-                                            fontSize: 12,
-                                            fontFamily: fontFamily.regular,
-                                            color: colors.gray[600]
-                                        }}
-                                    >
-                                        {item.name}
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            fontSize: 12,
-                                            fontFamily: fontFamily.regular,
-                                            color: colors.gray[600]
-                                        }}
-                                    >
-                                        {item.address}
-                                    </Text>
-                                </View>
-                            </Callout>
-                        </Marker>
-                    ))
+                {markets.map(item => (
+                    <Marker
+                        key={item.id}
+                        identifier={item.id}
+                        coordinate={{
+                            latitude: item.latitude,
+                            longitude: item.longitude
+                        }}
+                        image={require("@/assets/pin.png")}
+                    >
+                        <Callout
+                            onPress={() => router.navigate(`/market/${item.id}` as `/market/[id]`)}>
+                            <View>
+                                <Text
+                                    style={{
+                                        fontSize: 14,
+                                        fontFamily: fontFamily.medium,
+                                        color: colors.gray[600]
+                                    }}
+                                >
+                                    {item.name}
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontSize: 12,
+                                        fontFamily: fontFamily.regular,
+                                        color: colors.gray[600]
+                                    }}
+                                >
+                                    {item.address}
+                                </Text>
+                            </View>
+                        </Callout>
+                    </Marker>
+                ))
                 }
             </MapView>
+
             <Places data={markets} />
         </View>
     )
