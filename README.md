@@ -2,7 +2,7 @@
 
 ## About Nearby
 
-O _Nearby_ is an app that helps users to find fast food stores near them. Also allows us to apply discount coupons for fast food consumed in the local area using the app and the QR code provided in the stores.
+_Nearby_ is an app that helps users to find fast food stores near them. Also allows us to apply discount coupons for fast food consumed in the local area using the app and the QR code provided in the stores.
 
 
 ## Tecnologies
