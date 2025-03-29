@@ -23,7 +23,7 @@ O _Nearby_ is an app that helps users to find fast food stores near them. Also a
 
 ## Páginas
 - Welcome.
-- Map with local.
+- Store locations.
 - Market details and coupons.
 
 ## SRC structure
