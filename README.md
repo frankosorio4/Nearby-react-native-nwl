@@ -10,6 +10,10 @@ _Nearby_ is an app that helps users to find fast food stores near them. Also all
 - _External API:_ Node.Js.
 - Data Bank: Prisma.
 
+## Pré-requisite
+
+- **VSCODE**
+
 ## How to execute
 
 1. Install the Expo Go app on your cellphone or use an emulator on your computer.
